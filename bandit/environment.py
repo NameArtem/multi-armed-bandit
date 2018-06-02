@@ -3,17 +3,26 @@ import numpy as np
 
 
 class Environment(object):
+    """
+    Класс среды, моделирующий взаимодействие бандита и агента.
+    """
     def __init__(self, bandit, agents, label='Multi-Armed Bandit'):
         self.bandit = bandit
         self.agents = agents
         self.label = label
 
     def reset(self):
+        """
+        Сброс модели до начального состояния.
+        """
         self.bandit.reset()
         for agent in self.agents:
             agent.reset()
 
     def run(self, trials=100, experiments=1):
+        """
+        Запуск модели.
+        """
         scores = np.zeros((trials, len(self.agents)))
         optimal = np.zeros_like(scores)
 
@@ -32,6 +41,9 @@ class Environment(object):
         return scores / experiments, optimal / experiments
 
     def plot(self, scores, optimal):
+        """
+        Построение графика.
+        """
         plt.subplot(2, 1, 1)
         plt.title(self.label)
         plt.plot(scores)

@@ -14,6 +14,9 @@ class Agent(object):
         self.last_action = None
 
     def __str__(self):
+        """
+        Название агента (для легенды графиков).
+        """
         return '{}'.format(str(self.policy))
 
     def reset(self):
