@@ -39,6 +39,39 @@ class Environment(object):
                         optimal[t, i] += 1
 
         return scores / experiments, optimal / experiments
+    
+    def run_with_change(self, trials_before_change = 100, trials_after_change=100, experiments=1):
+        """
+        Запуск модели с изменением распределений бандита после
+        некоторого числа шагов.
+        """
+        scores = np.zeros((trials_before_change + trials_after_change, len(self.agents)))
+        optimal = np.zeros_like(scores)
+
+        for _ in range(experiments):
+            self.reset()
+            for t1 in range(trials_before_change):
+                for i1, agent1 in enumerate(self.agents):
+                    action1 = agent1.choose()
+                    reward1, is_optimal1 = self.bandit.pull(action1)
+                    agent1.observe(reward1)
+
+                    scores[t1, i1] += reward1
+                    if is_optimal1:
+                        optimal[t1, i1] += 1
+            
+            self.bandit.reset()
+            for t2 in range(trials_after_change):
+                for i2, agent2 in enumerate(self.agents):
+                    action2 = agent2.choose()
+                    reward2, is_optimal2 = self.bandit.pull(action2)
+                    agent2.observe(reward2)
+
+                    scores[trials_before_change + t2, i2] += reward2
+                    if is_optimal2:
+                        optimal[trials_before_change + t2, i2] += 1
+
+        return scores / experiments, optimal / experiments
 
     def plot(self, scores, optimal):
         """
