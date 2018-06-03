@@ -40,6 +40,18 @@ class Policy(object):
         return 0
 
 
+class RandomPolicy(Policy):
+    """
+    Чисто исследовательская стратегия.
+    Каждый раз действие выбирается случайно и равномерно.
+    """
+    def __str__(self):
+        return 'random'
+    
+    def choose(self, agent):
+        return np.random.choice(len(agent.qt))
+
+
 class GreedyPolicy(Policy):
     """
     Жадная стратегия. Получается, если в E-жадной стратегии выбрать
